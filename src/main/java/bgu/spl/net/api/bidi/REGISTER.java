@@ -22,7 +22,7 @@ public class REGISTER extends Operation {
                 count++;
         }
         username= new String(byteArr, 2, count-2, StandardCharsets.UTF_8);
-        password= new String(byteArr,count+1,len-count-1,StandardCharsets.UTF_8);
+        password= new String(byteArr,count+1,len-count-2,StandardCharsets.UTF_8);
     }
 
 }

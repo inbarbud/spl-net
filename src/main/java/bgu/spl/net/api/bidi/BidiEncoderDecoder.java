@@ -21,16 +21,20 @@ public class BidiEncoderDecoder<Operation> implements MessageEncoderDecoder<Oper
 
         if (nextByte == 12) {
             short opcode= bytesToShort(bytes);
+            Operation result = null;
             switch (opcode){
-                case 1: return (Operation) new REGISTER(bytes,len);
-                case 2: return (Operation) new LOGIN(bytes,len);
-                case 3: return (Operation) new LOGOUT();
-                case 4: return (Operation) new FOLLOW(bytes,len);
-                case 5: return (Operation) new POST(bytes,len);
-                case 6: return (Operation) new PM(bytes,len);
-                case 7: return (Operation) new USERLIST();
-                case 8: return (Operation) new STAT(bytes,len);
+                case 1: result = (Operation) new REGISTER(bytes,len); break;
+                case 2: result = (Operation) new LOGIN(bytes,len); break;
+                case 3: result = (Operation) new LOGOUT(); break;
+                case 4: result = (Operation) new FOLLOW(bytes,len); break;
+                case 5: result = (Operation) new POST(bytes,len); break;
+                case 6: result = (Operation) new PM(bytes,len); break;
+                case 7: result = (Operation) new USERLIST(); break;
+                case 8: result = (Operation) new STAT(bytes,len); break;
             }
+            len = 0;
+            bytes = new byte[1 << 10]; //start with 1k
+            return result;
         }
         pushByte(nextByte);
         return null; //not a line yet

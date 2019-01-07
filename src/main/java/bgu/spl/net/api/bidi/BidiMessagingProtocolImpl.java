@@ -57,11 +57,11 @@ public class BidiMessagingProtocolImpl<Operation> implements BidiMessagingProtoc
             shouldError=true;
         }
         //password doesn’t match the one entered for the username
-        if(!clients.isCorrectPassword(((LOGIN)message).username, ((LOGIN)message).password)){
+        else if(!clients.isCorrectPassword(((LOGIN)message).username, ((LOGIN)message).password)){
             shouldError=true;
         }
         //the current client has already succesfully logged in
-        if(clients.isLoggedIn(((LOGIN)message).username))
+        else if(clients.isLoggedIn(((LOGIN)message).username))
         {
             shouldError=true;
         }
@@ -70,7 +70,7 @@ public class BidiMessagingProtocolImpl<Operation> implements BidiMessagingProtoc
         }
         else{
             //login user
-            clients.loginClient(((LOGIN)message).username);
+            clients.loginClient(((LOGIN)message).username,ID);
             ACK ack = new ACK(2);
             System.out.println(((LOGIN) message).username + " logged in!");
             connections.send(ID,(Operation)ack);
@@ -83,7 +83,7 @@ public class BidiMessagingProtocolImpl<Operation> implements BidiMessagingProtoc
             shouldError=true;
         }
         //user is not logged in
-        if(!clients.isLoggedIn(ID))
+        else if(!clients.isLoggedIn(ID))
         {
             shouldError=true;
         }
@@ -92,11 +92,11 @@ public class BidiMessagingProtocolImpl<Operation> implements BidiMessagingProtoc
         }
         else{
             clients.logoutClient(ID);
-            connections.disconnect(ID);
-            terminate=true;
             ACK ack = new ACK(3);
-            System.out.println((clients.getUserName(ID) + " logged out!"));
             connections.send(ID,(Operation)ack);
+            terminate = true;
+            System.out.println((clients.getUserName(ID) + " logged out!"));
+
         }
     }
     private void processFollow(Operation message) {
@@ -192,7 +192,8 @@ public class BidiMessagingProtocolImpl<Operation> implements BidiMessagingProtoc
             SendError(6);
         }
         else{
-            connections.send(clients.getID(((PM)message).username), message);
+            NOTIFICATION noti = new NOTIFICATION(0 , clients.getUserName(ID),((PM) message).content);
+            connections.send(clients.getID(((PM)message).username), (Operation)noti);
             //save to a data structure in the application, along with post messages
             clients.saveMessage(ID,((PM)message).content);
             ACK ack = new ACK(6);

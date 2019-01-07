@@ -19,7 +19,7 @@ public class PM extends Operation {
             else
                 count++;
         }
-        username= new String(byteArr, 2, count, StandardCharsets.UTF_8);
-        content= new String(byteArr,count,len,StandardCharsets.UTF_8);
+        username= new String(byteArr, 2, count-2, StandardCharsets.UTF_8);
+        content= new String(byteArr,count+1,len-count-2,StandardCharsets.UTF_8);
     }
 }

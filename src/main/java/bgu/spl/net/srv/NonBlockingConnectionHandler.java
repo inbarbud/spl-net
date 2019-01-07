@@ -122,7 +122,8 @@ public class NonBlockingConnectionHandler<T> implements bgu.spl.net.srv.bidi.Con
     public void send(T msg){
 
         //TODO: check
-        writeQueue.add(ByteBuffer.wrap(encdec.encode(msg)));
+        byte[] tosend = encdec.encode(msg);
+        writeQueue.add(ByteBuffer.wrap(tosend));
         reactor.updateInterestedOps(chan, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
     }
 }

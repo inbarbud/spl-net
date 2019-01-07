@@ -1,5 +1,6 @@
 package bgu.spl.net.api.bidi;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -56,8 +57,19 @@ public class ClientsData {
         return (pas.equals(password));
     }
 
-    public void loginClient(String username){
+    public void loginClient(String username, int ID){
         logins.put(username,true);
+        int temp = 0;
+        for (ConcurrentHashMap.Entry<String, Integer> entry : connectionIds.entrySet()) {
+            if(username.equals(entry.getKey())){
+                temp = entry.getValue();
+               connectionIds.put(username,ID);
+            }
+        }
+        for (Map.Entry<String,Integer> entry : following.entrySet()){
+            if(temp == entry.getValue())
+                following.put(entry.getKey(),ID);
+        }
     }
 //    public void logoutClient(String username){
 //        logins.put(username,false);
